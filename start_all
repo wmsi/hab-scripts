@@ -1,55 +1,83 @@
 #!/bin/bash
 # gqrx & fldigi Launcher
+clear
+echo "===== WMSI Startup script for HAB tracker station software ====="
 
-# This was the old way, but it doesn't seem to universally work.
-# We've moved on to use the snd-aloop module (equivalent to a driver in Windows)
-# to handle the audio loopback.  It seems, as implied, to be much more reliable.
-#
-# ######## Again, this is old... ########
-# # We're trying to start everything to get gqrx and fldigi
-# # to listen to eachother.  First we need to start pulse audio:
-# echo Launching Pulse Audio...
-# pulseaudio &
-#
-# echo Sleeping...please wait...
-# sleep 4
-#
-# # Configure the virtual audio interfaces...
-# echo Configuring Pulse Audio...
-# pactl load-module module-null-sink sink_name=Virtual1 sink_properties=device.description="Virtual1"
-#
-# # Need more sleepytime...
-# sleep 4
+# Useful coloring / styling commands (used as ${bold}**Text**${normal})
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+# Constants likely to be changed
+rtty_freq="434.25 MHz"
+sdr_device="Realtek RTL2838UHIDIR SN: 00000001"
+
+# We use the snd-aloop module (equivalent to a driver in Windows)
+# to handle the audio loopback, which feeds the radio sound output by gqrx 
+# back into dl-fldigi for analysis. 
+# This loopback method is much more reliable than the previous Pulse Audio-based method.
 
 # Let's start by loading the kernel module:
-echo Bringing up ASLA sound loopback...
+echo "Bringing up ALSA audio loopback..."
 sudo modprobe snd-aloop
-sleep 4
+sleep 2
 
 clear
-# Tell the user what's about to happen and what they need to do.
-echo
-echo
-echo ===============================================================
-echo You will need to configure gqrx before proceeding to dl-fldigi.
-echo Once gqrx is playing, return here and press ENTER.
-echo Press ENTER now to continue...
-read -p "==============================================================="
+
+echo "===============================================================
+You will need to configure ${bold}two${normal} pieces of software.
+The first tunes the radio and the second decodes the output.
+These must be opened ${bold}in sequence${normal} or they will crash.
+
+This involves: 
+    1. Opening the configuration dialog (Available either at 
+       startup or by clicking on 'Configure I/O Devices')
+    2. Setting 'Device' to ${bold}$sdr_device${normal}
+    3. Selecting ${bold}'Loopback: PCM (hw:1,1)'${normal} as the 
+       Audio output 'Device'.
+    4. Pressing the ${bold}Play${normal} button to start reading input.
+    5. Tuning to the peak near the frequency ${bold}$rtty_freq${normal}.
+       You’re tuned when two ‘humps’ show up under the audio tab.
+    6. Ensuring 'Mode' under 'Receiver Options' is set to ${bold}USB${normal}
+       
+Once gqrx is playing, return to this terminal and press ENTER.
+===============================================================
+"
+read -p "Press ENTER now to start gqrx..."
 
 # Now we need to start gqrx, (there seems to need to be some time between starting
-# gqrx and fldigi.
-./start_gqrx >/dev/null &
-read -p "Configure gqrx and start listening to the RTTY, then press ENTER here."
+# gqrx and fldigi.)
+echo "Starting gqrx (click ${bold}No${normal} if asked about configuration)..."
+./start_gqrx &>/dev/null &
+sleep 2
+read -p "Once you have finished setting up gqrx and started it, press ENTER here..."
+read -p "Press ENTER again to confirm that gqrx is fully started 
+ (you can see the ${bold}moving${normal} spectrum and waterfall)..."
+    
+clear
+
+echo "====================================================================
+You will now need to configure dl-fldigi to receive and decode
+the audio from gqrx.
+
+This involves:
+    1. Making sure DL-FLDIGI is configured to receive RTTY 
+       (see WMSI docs)
+    2. Ensuring DL-FLDIGI is set to listen to the loopback device:
+       (make sure ${bold}Configure->Sound Card->Devices->PortAudio->Capture${normal}
+       is set to ${bold}'Loopback: PCM (hw:1,0)'${normal})
+    3. Making sure it's tuned onto the two humps/yellow lines 
+       and/or use autotune (enable 'RxID’; upper right).
+
+====================================================================
+"
+read -p "Press ENTER now to start dl-fldigi..."
 
 # Let's start fldigi now that gqrx is listening and playing back...
-~/dl-fldigi/src/dl-fldigi --hab >/dev/null
+echo "Starting dl-fldigi..."
+./start_dlfldigi &>/dev/null &
+sleep 5
+echo "Have fun tracking!"
+echo "(close this terminal to close everything)"
 
-# ######## This is also deprecated... ########
-# # Might as well sleep here too...
-# sleep 4
-#
-# Now we need to launch Pulse Audio Volume Control, (pavucontrol)...
-# pavucontrol &
-#
-# # The user will have to do everything else by themselves.  Good luck! :D
-##############################################
+# don't close unless all closed
+wait
