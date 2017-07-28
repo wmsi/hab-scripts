@@ -1,5 +1,8 @@
 #!/bin/bash
 # gqrx & fldigi Launcher
+
+BASEDIR=$(dirname "$(readlink -f "$0")")
+
 clear
 echo "===== WMSI Startup script for HAB tracker station software ====="
 
@@ -23,14 +26,26 @@ sleep 2
 
 clear
 
+echo "===============================================================
+You will need to configure ${bold}two${normal} pieces of software.
+The first tunes the radio and the second decodes the output.
+These must be opened and setup ${bold}in sequence${normal} or they will crash.
 
+This involves: 
+    1. Pressing the ${bold}Play${normal} button to start reading input.
+    2. Tuning to the peak near the frequency ${bold}$rtty_freq${normal}.
+       You’re tuned when two ‘humps’ show up under the audio tab on the right.
+       
+Once gqrx is playing, return to this terminal and press ENTER.
+===============================================================
+"
 read -p "Press ENTER now to start gqrx..."
 # Copy the good configuration:
-cp ~/.config/gqrx/working1707261615.conf.BAK ~/.config/gqrx/default.conf
+cp $BASEDIR/gqrx-default-config.conf ~/.config/gqrx/default.conf
 # Start gqrx:
-./start_gqrx &>/dev/null &
+$BASEDIR/start_gqrx &>/dev/null &
 sleep 2
-read -p "Once you have finished setting up gqrx and started it, press ENTER here..."
+read -p "Once you have finished starting gqrx, press ENTER here..."
 read -p "Press ENTER again to confirm that gqrx is fully started 
  (you can see the ${bold}moving${normal} spectrum and waterfall)..."
 
@@ -55,7 +70,7 @@ read -p "Press ENTER now to start dl-fldigi..."
 
 # Let's start fldigi now that gqrx is listening and playing back...
 echo "Starting dl-fldigi..."
-./start_dlfldigi &>/dev/null &
+$BASEDIR/start_dlfldigi &>/dev/null &
 sleep 5
 echo "Have fun tracking!"
 echo "(close this terminal to close everything)"
