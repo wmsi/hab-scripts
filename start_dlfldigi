@@ -1,0 +1,3 @@
+#!/bin/bash
+# Let's try and start dlfldigi...
+./dl-fldigi/src/dl-fldigi --hab

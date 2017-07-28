@@ -1,0 +1,55 @@
+#!/bin/bash
+# gqrx & fldigi Launcher
+
+# This was the old way, but it doesn't seem to universally work.
+# We've moved on to use the snd-aloop module (equivalent to a driver in Windows)
+# to handle the audio loopback.  It seems, as implied, to be much more reliable.
+#
+# ######## Again, this is old... ########
+# # We're trying to start everything to get gqrx and fldigi
+# # to listen to eachother.  First we need to start pulse audio:
+# echo Launching Pulse Audio...
+# pulseaudio &
+#
+# echo Sleeping...please wait...
+# sleep 4
+#
+# # Configure the virtual audio interfaces...
+# echo Configuring Pulse Audio...
+# pactl load-module module-null-sink sink_name=Virtual1 sink_properties=device.description="Virtual1"
+#
+# # Need more sleepytime...
+# sleep 4
+
+# Let's start by loading the kernel module:
+echo Bringing up ASLA sound loopback...
+sudo modprobe snd-aloop
+sleep 4
+
+clear
+# Tell the user what's about to happen and what they need to do.
+echo
+echo
+echo ===============================================================
+echo You will need to configure gqrx before proceeding to dl-fldigi.
+echo Once gqrx is playing, return here and press ENTER.
+echo Press ENTER now to continue...
+read -p "==============================================================="
+
+# Now we need to start gqrx, (there seems to need to be some time between starting
+# gqrx and fldigi.
+./start_gqrx >/dev/null &
+read -p "Configure gqrx and start listening to the RTTY, then press ENTER here."
+
+# Let's start fldigi now that gqrx is listening and playing back...
+~/dl-fldigi/src/dl-fldigi --hab >/dev/null
+
+# ######## This is also deprecated... ########
+# # Might as well sleep here too...
+# sleep 4
+#
+# Now we need to launch Pulse Audio Volume Control, (pavucontrol)...
+# pavucontrol &
+#
+# # The user will have to do everything else by themselves.  Good luck! :D
+##############################################
