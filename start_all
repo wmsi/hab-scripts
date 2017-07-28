@@ -23,36 +23,17 @@ sleep 2
 
 clear
 
-echo "===============================================================
-You will need to configure ${bold}two${normal} pieces of software.
-The first tunes the radio and the second decodes the output.
-These must be opened ${bold}in sequence${normal} or they will crash.
 
-This involves: 
-    1. Opening the configuration dialog (Available either at 
-       startup or by clicking on 'Configure I/O Devices')
-    2. Setting 'Device' to ${bold}$sdr_device${normal}
-    3. Selecting ${bold}'Loopback: PCM (hw:1,1)'${normal} as the 
-       Audio output 'Device'.
-    4. Pressing the ${bold}Play${normal} button to start reading input.
-    5. Tuning to the peak near the frequency ${bold}$rtty_freq${normal}.
-       You’re tuned when two ‘humps’ show up under the audio tab.
-    6. Ensuring 'Mode' under 'Receiver Options' is set to ${bold}USB${normal}
-       
-Once gqrx is playing, return to this terminal and press ENTER.
-===============================================================
-"
 read -p "Press ENTER now to start gqrx..."
-
-# Now we need to start gqrx, (there seems to need to be some time between starting
-# gqrx and fldigi.)
-echo "Starting gqrx (click ${bold}No${normal} if asked about configuration)..."
+# Copy the good configuration:
+cp ~/.config/gqrx/working1707261615.conf.BAK ~/.config/gqrx/default.conf
+# Start gqrx:
 ./start_gqrx &>/dev/null &
 sleep 2
 read -p "Once you have finished setting up gqrx and started it, press ENTER here..."
 read -p "Press ENTER again to confirm that gqrx is fully started 
  (you can see the ${bold}moving${normal} spectrum and waterfall)..."
-    
+
 clear
 
 echo "====================================================================
