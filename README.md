@@ -1,12 +1,26 @@
 # rtty-groundstation-startup
-Startup scripts for a High Altitude Balloon groundstation receiving RTTY downlink signals. Designed for use on the Raspberry Pi.
+These scripts are designed to guide a user through starting up the software required
+to use DL-FLDIGI with a software-defined radio, to recieve RTTY telemetry from a High Altitude Balloon.
 
-## Requirements
-You will need to have [GQRX](http://gqrx.dk/) and [DL-FLDIGI](https://ukhas.org.uk/projects:dl-fldigi) installed to use this script. They will need to be installed in accordance with start\_gqrx and start\_dlfldigi
+This involves creating a Virtual Audio Loopback Device, starting up the SDR tool GQRX
+and configuring it to output to that Loopback Device, and then starting up DL-FLDIGI
+and listening to that device.
+
+Designed for use on the Raspberry Pi.
+
+## Installation
+You will need to have [GQRX](http://gqrx.dk/) and [DL-FLDIGI](https://ukhas.org.uk/projects:dl-fldigi) installed to use this script.
+
+You will also need to configure some variables to your setup:
+- Set `DL_FLDIGI_ROOT` to the `src/` directory of your DL-FLDIGI installation.
+- Set `GQRX_ROOT` to the root directory of your GQRX installation.
 
 It has also only been tested on the Raspberry Pi. 
 
 ## Usage
-See White Mountain Science's [internal guide](https://docs.google.com/document/d/1bzXN15sgmevQ5vlYJJ5ax8ZhUK_JHZSXjYKJSROzY5U/edit#heading=h.l4br9kx5sb2g) or our [script usage guide](https://docs.google.com/document/d/1YyQdTc5vErq8AetqWkQUkAtAH35LsKyGhh1qk3cgxRU/edit?usp=sharing)
+To execute the scripts, simply run ./start_all as a normal (non-sudo) user
+in a terminal on the Pi desktop, and then follow the prompts.
+
+See also White Mountain Science's [internal guide](https://docs.google.com/document/d/1bzXN15sgmevQ5vlYJJ5ax8ZhUK_JHZSXjYKJSROzY5U/edit#heading=h.l4br9kx5sb2g) or our [script usage guide](https://docs.google.com/document/d/1YyQdTc5vErq8AetqWkQUkAtAH35LsKyGhh1qk3cgxRU/edit?usp=sharing)
 
 To contact us, see [whitemountainscience.org](whitemountainscience.org)
