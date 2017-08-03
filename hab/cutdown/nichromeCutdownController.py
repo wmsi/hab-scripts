@@ -22,29 +22,13 @@ import re
 import RPi.GPIO as gpio
 import sys
 import re
+from nichromeControl import Nichrome
 
 ################# CONSTANTS ####################
 MAX_ALTITUDE = 550 # Set the maximum altitude (in meters) HERE!
-NICHROME_PIN = 16 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is not used by the Pi in the Sky Board.
-NICHROME_ACTIVATIONS = 5 # number of nichrome pulses
 ################################################
 
-def setup_pins():
-    gpio.setmode(gpio.BCM)
-    gpio.setup(NICHROME_PIN, gpio.OUT)
-
-def activate_nichrome():
-    """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses """
-    print "Activating nichrome {} times...".format(NICHROME_ACTIVATIONS)
-    for i in range(NICHROME_ACTIVATIONS):
-        # Turn on the nichrome cutdown and let go of the balloon!
-         gpio.output(NICHROME_PIN, gpio.HIGH)
-         time.sleep(2) # 2 second pulse
-         # Turn off signal (nichrome will then shut off)
-         gpio.output(NICHROME_PIN, gpio.LOW)
-         time.sleep(0.1) # 100ms off time
-
-def process_telemetry_string(telem):
+def process_telemetry_string(telem, nichrome):
     """ Extracts and anaylzes the altitude from a raw telemetry string """
     telemFields = telem.split(",")
     try:
@@ -58,7 +42,7 @@ def process_telemetry_string(telem):
 
             # Make sure this altitude is not larger than the predetermined cut down altitude
             if alt >= MAX_ALTITUDE:
-                activate_nichrome()
+                Nichrome.activate()
                 return True
 
     # Continue on parsing errors
@@ -69,7 +53,7 @@ def process_telemetry_string(telem):
     return False
 
 def main():
-    setup_pins()
+    nichrome = Nichrome()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
     # This opens the log file the Pi in the sky saves to
     with open('/home/pi/pits/tracker/telemetry.txt', 'r+') as log: # /home/pi/pits/tracker/telemetry.txt
@@ -97,7 +81,7 @@ def main():
 
                 # process the lines
                 for line in telemetry:
-                    done = process_telemetry_string(line)
+                    done = process_telemetry_string(line, nichrome)
 
                     # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
                     if done:
