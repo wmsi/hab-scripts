@@ -1,72 +1,119 @@
+#!/usr/bin/python
+################################################################################
 # Written by Nicholas Sullo while working at WMSI 8/17/2015
-# Modified by Mckenna Cisler while working at WMSI 7/31/2017, to use the nichrome cutdown method
-# Refer to http://abyz.co.uk/rpi/pigpio/ for more information and example code for the pigpio library
+# Modified heavily by Mckenna Cisler (mckennacisler@gmail.com)
+# while working at WMSI 7/31/2017, to use the nichrome cutdown method
+#
+# Refer to http://abyz.co.uk/rpi/pigpio/ for more information and
+# example code for the pigpio library
+#
+# IMPLEMENTATION NOTE (Mckenna):
+#   An obvious solution to reading the logfile data is to keep the file open
+#   over the entire course of the program, using log.readlines() to only read
+#   the NEW lines. However, my fear with this solution is if the file somehow
+#   gets corrupted or overwritten from the beginning, in which case the program,
+#   sitting at a seek position 500 lines down, has to wait for 500 telem strings
+#   before parsing another, at which point we may be thousands of feet above
+#   the desired cutdown.
+################################################################################
 
 import time
 import re
-import RPi.GPIO as gpio
+#import RPi.GPIO as gpio
 import sys
+import re
 
 ################# CONSTANTS ####################
-maxaltitude = 550 # Set the maximum altitude (in meters) HERE!
-callsign = "KC1EA"
-nichrome_pin = 16 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is not used by the Pi in the Sky Board.
-nichrome_activations = 5 # number of nichrome pulses
+MAX_ALTITUDE = 550 # Set the maximum altitude (in meters) HERE!
+NICHROME_PIN = 16 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is not used by the Pi in the Sky Board.
+NICHROME_ACTIVATIONS = 5 # number of nichrome pulses
 ################################################
 
-gpio.setup(nichrome_pin, gpio.OUT)
+#gpio.setup(nichrome_pin, gpio.OUT)
 
 def activate_nichrome():
-    print "Activating nichrome..."
-    for i in range(nichrome_activations):
-         gpio.output(nichrome_pin, gpio.HIGH) # Turn on the nichrome cutdown and let go of the balloon!
+    """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses """
+    print "Activating nichrome {} times...".format(NICHROME_ACTIVATIONS)
+    for i in range(NICHROME_ACTIVATIONS):
+        # Turn on the nichrome cutdown and let go of the balloon!
+         gpio.output(NICHROME_PIN, gpio.HIGH)
          time.sleep(2) # 2 second pulse
-         gpio.output(nichrome_pin, gpio.LOW) # Turn off signal (nichrome will have shut off on its own)
+         # Turn off signal (nichrome will then shut off)
+         gpio.output(NICHROME_PIN, gpio.LOW)
          time.sleep(0.1) # 100ms off time
 
-while 1:
+def process_telemetry_string(telem):
+    """ Extracts and anaylzes the altitude from a raw telemetry string """
+    telemFields = telem.split(",")
+    try:
+        # Check to make sure the string is actually the telemetry data. This will have to be changed based on what you name your payload
+        if re.match("\$\$\w{1,10}", telemFields[0]) != None:
+            # The 6th field in the telemetry string is the altitude
+            # (Turn the string altitude value into an integer)
+            alt = int(telemFields[5])
+
+            print("Altitude: {}".format(alt))
+
+            # Make sure this altitude is not larger than the predetermined cut down altitude
+            if alt >= MAX_ALTITUDE:
+                activate_nichrome()
+                return True
+
+    # Continue on parsing errors
+    except IndexError or ValueError:
+            return False
+
+    # not done if we're below max altitude
+    return False
+
+def main():
+    """ Reads telemetry lines from a logfile and transfers them to a backup file """
+    # This opens the log file the Pi in the sky saves to
+    with open('telemetry.txt', 'r+') as log: # /home/pi/pits/tracker/telemetry.txt
+        # This opens a file to move the telemetry data to
+        with open('telemetrydata.txt', 'a') as logout: # /home/pi/pits/tracker/telemetrydata.txt
+            while True:
+                # Read what lines we have
+                # (from the seek position, which we enforce to be 0)
+                log.seek(0)
+                telemetry = log.readlines()
+
+                # IMMEDIATELY remove the lines we just read
+                # (I was inclined to delete the lines after everything had
+                #  finished with the idea that if the lines below had an exception,
+                #  we could re-read the data. However, I realized that it is likely
+                #  that something about that data caused the error, so it's best
+                #  to skip it the next time around. Additionally, clearning them
+                #  below has a chance of overwriting a new line of data that had
+                #  been added to the file in the interim, though this is unlikely)
+                log.seek(0)
+                log.truncate()
+
+                # transfer lines from log file to logout file
+                logout.writelines(telemetry)
+
+                # process the lines
+                for line in telemetry:
+                    done = process_telemetry_string(line)
+
+                    # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
+                    if done:
+                        return
+
+                # delay for a short bit
+                time.sleep(10)
+
+while True:
     # restart on any exception
     try:
-    	log = open('/home/pi/pits/tracker/telemetry.txt', 'r+') # This opens the log file the Pi in the sky saves to
-    	with open('/home/pi/pits/tracker/telemetrydata.txt', 'a') as logout: # This opens a file to move the telemetry data to
-            telemetry = log.readlines() # Reads all the lines in the log file
-            size = len(telemetry) # Determines the number of lines based on the size of the telemetry list
-            last = size - 1 # The last telemetry line will be one less than the number of elements in the list since the last line of the log file is blank
-
-            while last < 0: # The program moves faster than the log file gets filled, so if there is no more data in the log file to go through,
-                telemetry = log.readlines() # keep checking the file until there is data
-                size = len(telemetry)
-                last = size - 1
-
-                output = telemetry[last]
-                logout.write(output) # Write the data we just read to a new file
-
-                log.seek(0)
-                for i in telemetry:
-                    if i != output:
-                        log.write(i)
-                log.truncate() # And then get rid of the data we just read from the log file so we don't have to go through it later
-                log.close() # Close the log file so it will refresh with new telemetry data from the Pi in the sky
-
-             	if output[0:10] == "$${}}".format(callsign): # Check to make sure the string is actually the telemetry data. This will have to be changed based on what you name your payload
-                     altpos = [m.start() for m in re.finditer(r",",output)][4] # Find the fifth instance of a comma, which will immediately preceed the altitude
-                     altpos = altpos + 1 # Move past the comma by moving forward 1 position
-                     altend = altpos + 5 # Determine the end of the altitude value which will always be 5 positions away
-                     alt = output[altpos:altend] # Using these two bounds, extract the altitude from the telemetry string
-                     alt = int(alt) # Turn the string altitude value into an integer
-
-                     print(alt)
-
-                     if alt >= maxaltitude: # Make sure this altitude is not larger than the predetermined cut down altitude
-                         activate_nichrome()
-                         break # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
-                         break
-
+        main()
     except SyntaxError as e:
         print "SYNTAX ERROR: {}".format(e)
+    except KeyboardInterrupt:
+        break
     except:
-        e = sys.exc_info()[0]
-        print "RUNTIME ERROR: {}".format(e)
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        print "RUNTIME ERROR ({}): {}".format(exc_type, exc_value)
         continue
     finally:
         gpio.cleanup()
