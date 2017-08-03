@@ -21,7 +21,7 @@ delta = 1
 while True:
     # the actual tracker code RE-opens the file on EACH log for appending
     # see https://github.com/PiInTheSky/pits/blob/5c14e77f671e3e21b651eaf65b83e762b94fbad8/tracker/misc.c#L41
-    with open("telemetry.txt", "at") as log:
+    with open("/home/pi/pits/tracker/telemetry.txt", "at") as log:
         # add some randomness, and make sure it includes the max random value
         alt = num*ALTITUDE_INCREMENT + START_ALTITUDE + \
             int(ALTITUDE_RANDOMNESS * (random.random() + 0.25))

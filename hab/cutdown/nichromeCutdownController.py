@@ -19,7 +19,7 @@
 
 import time
 import re
-#import RPi.GPIO as gpio
+import RPi.GPIO as gpio
 import sys
 import re
 
@@ -29,7 +29,9 @@ NICHROME_PIN = 16 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is n
 NICHROME_ACTIVATIONS = 5 # number of nichrome pulses
 ################################################
 
-#gpio.setup(nichrome_pin, gpio.OUT)
+def setup_pins():
+    gpio.setmode(gpio.BCM)
+    gpio.setup(NICHROME_PIN, gpio.OUT)
 
 def activate_nichrome():
     """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses """
@@ -67,11 +69,12 @@ def process_telemetry_string(telem):
     return False
 
 def main():
+    setup_pins()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
     # This opens the log file the Pi in the sky saves to
-    with open('telemetry.txt', 'r+') as log: # /home/pi/pits/tracker/telemetry.txt
+    with open('/home/pi/pits/tracker/telemetry.txt', 'r+') as log: # /home/pi/pits/tracker/telemetry.txt
         # This opens a file to move the telemetry data to
-        with open('telemetrydata.txt', 'a') as logout: # /home/pi/pits/tracker/telemetrydata.txt
+        with open('/home/pi/pits/tracker/telemetrydata.txt', 'a') as logout: # /home/pi/pits/tracker/telemetrydata.txt
             while True:
                 # Read what lines we have
                 # (from the seek position, which we enforce to be 0)
