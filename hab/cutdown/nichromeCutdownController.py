@@ -1,21 +1,23 @@
 #!/usr/bin/python
+"""
 ################################################################################
-# Written by Nicholas Sullo while working at WMSI 8/17/2015
-# Modified heavily by Mckenna Cisler (mckennacisler@gmail.com)
-# while working at WMSI 7/31/2017, to use the nichrome cutdown method
-#
-# Refer to http://abyz.co.uk/rpi/pigpio/ for more information and
-# example code for the pigpio library
-#
-# IMPLEMENTATION NOTE (Mckenna):
-#   An obvious solution to reading the logfile data is to keep the file open
-#   over the entire course of the program, using log.readlines() to only read
-#   the NEW lines. However, my fear with this solution is if the file somehow
-#   gets corrupted or overwritten from the beginning, in which case the program,
-#   sitting at a seek position 500 lines down, has to wait for 500 telem strings
-#   before parsing another, at which point we may be thousands of feet above
-#   the desired cutdown.
+Written by Nicholas Sullo while working at WMSI 8/17/2015
+Modified heavily by Mckenna Cisler (mckennacisler@gmail.com)
+while working at WMSI 7/31/2017, to use the nichrome cutdown method
+
+Refer to http://abyz.co.uk/rpi/pigpio/ for more information and
+example code for the pigpio library
+
+IMPLEMENTATION NOTE (Mckenna):
+  An obvious solution to reading the logfile data is to keep the file open
+  over the entire course of the program, using log.readlines() to only read
+  the NEW lines. However, my fear with this solution is if the file somehow
+  gets corrupted or overwritten from the beginning, in which case the program,
+  sitting at a seek position 500 lines down, has to wait for 500 telem strings
+  before parsing another, at which point we may be thousands of feet above
+  the desired cutdown.
 ################################################################################
+"""
 
 import time
 import re

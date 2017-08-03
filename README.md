@@ -6,7 +6,7 @@ They generally interface with the [Pi In The Sky software and hardware](http://w
 ## hab/
 Scripts that will run on the actual High Altitude Balloon.
 
-## rtty-groundstation-startup
+## rtty-groundstation-startup/
 Scripts for a RTTY tracking groundstation
 
 #### Contact WMSI at [whitemountainscience.org](whitemountainscience.org) for more information / questions!
