@@ -11,7 +11,7 @@ import RPi.GPIO as gpio
 import time
 
 ######################### IMPORTANT VALUES
-NICHROME_PIN = 16 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is not used by the Pi in the Sky Board.
+NICHROME_PIN = 18 # TODO Sets GPIO 16 as a the nichrome output pin. GPIO 16 is not used by the Pi in the Sky Board.
 NICHROME_ACTIVATIONS = 5 # number of nichrome pulses
 
 class Nichrome:
@@ -26,13 +26,15 @@ class Nichrome:
         for i in range(NICHROME_ACTIVATIONS):
             # Turn on the nichrome cutdown and let go of the balloon!
              gpio.output(NICHROME_PIN, gpio.HIGH)
+             print "Sending high..."
              time.sleep(2) # 2 second pulse
              # Turn off signal (nichrome will then shut off)
              gpio.output(NICHROME_PIN, gpio.LOW)
+             print "Sending low..."
              time.sleep(0.1) # 100ms off time
     
     def __del__(self):
         gpio.cleanup()
         
     def __str__(self):
-        return "Nichrome object setup for pin " + NICHROME_PIN
+        return "Nichrome object setup for pin " + str(NICHROME_PIN)
