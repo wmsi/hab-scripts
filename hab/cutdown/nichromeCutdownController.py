@@ -21,7 +21,6 @@ IMPLEMENTATION NOTE (Mckenna):
 
 import time
 import re
-import RPi.GPIO as gpio
 import sys
 import re
 from nichromeControl import Nichrome
@@ -29,6 +28,10 @@ from nichromeControl import Nichrome
 ################# CONSTANTS ####################
 MAX_ALTITUDE = 550 # Set the maximum altitude (in meters) HERE!
 ################################################
+
+def loginfo(msg):
+    newMsg = time.strftime("%x %X %Z ") + msg
+    print newMsg
 
 def process_telemetry_string(telem, nichrome):
     """ Extracts and anaylzes the altitude from a raw telemetry string """
@@ -40,7 +43,7 @@ def process_telemetry_string(telem, nichrome):
             # (Turn the string altitude value into an integer)
             alt = int(telemFields[5])
 
-            print("Altitude: {}".format(alt))
+            loginfo("Altitude: {}".format(alt))
 
             # Make sure this altitude is not larger than the predetermined cut down altitude
             if alt >= MAX_ALTITUDE:
@@ -55,6 +58,7 @@ def process_telemetry_string(telem, nichrome):
     return False
 
 def main():
+    loginfo("Starting controller...")
     nichrome = Nichrome()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
     # This opens the log file the Pi in the sky saves to
@@ -90,19 +94,17 @@ def main():
                         return
 
                 # delay for a short bit
-                time.sleep(10)
+                time.sleep(0.25)
 
 while True:
     # restart on any exception
     try:
         main()
     except SyntaxError as e:
-        print "SYNTAX ERROR: {}".format(e)
+        loginfo("SYNTAX ERROR: {}".format(e))
     except KeyboardInterrupt:
         break
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        print "RUNTIME ERROR ({}): {}".format(exc_type, exc_value)
+        loginfo("RUNTIME ERROR ({}): {}".format(exc_type, exc_value))
         continue
-    finally:
-        gpio.cleanup()

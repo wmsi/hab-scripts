@@ -18,7 +18,8 @@ class Nichrome:
     def __init__(self):
         gpio.setmode(gpio.BCM)
         gpio.setup(NICHROME_PIN, gpio.OUT)
-        
+        pass
+
     def activate(self):
         """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses,
         setup_pins() must be called."""
@@ -32,9 +33,9 @@ class Nichrome:
              gpio.output(NICHROME_PIN, gpio.LOW)
              print "Sending low..."
              time.sleep(0.1) # 100ms off time
-    
+
     def __del__(self):
         gpio.cleanup()
-        
+
     def __str__(self):
         return "Nichrome object setup for pin " + str(NICHROME_PIN)
