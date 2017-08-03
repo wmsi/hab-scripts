@@ -3,7 +3,10 @@
 Author: Asher
 
 This function sets up the nichrome control pin as well as provides a funtion
-    to cut the nichrome:
+    to cut the nichrome.
+	
+If you need to find available pins, you'll have to look at:
+https://github.com/PiInTheSky/pits-hardware/blob/master/Pits-Stacking-System-GPIO-Allocations.pdf
 """
 
 # Import things we need:
