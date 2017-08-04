@@ -26,7 +26,7 @@ import re
 from nichromeControl import Nichrome
 
 ################################ CONSTANTS ####################################
-MAX_ALTITUDE = 550 # Set the maximum altitude (in meters) HERE!
+MAX_ALTITUDE = 450 # Set the maximum altitude (in meters) HERE!
 HAB_TELEM_FILE = '/home/pi/pits/tracker/telemetry.txt'
 HAB_TELEM_BACKUP = '/home/pi/pits/tracker/telemetrydata.txt' # where to dump log data
 ###############################################################################
@@ -34,7 +34,7 @@ HAB_TELEM_BACKUP = '/home/pi/pits/tracker/telemetrydata.txt' # where to dump log
 def loginfo(msg):
     newMsg = time.strftime("%x %X %Z | ") + msg
     print newMsg
-
+    
 def process_telemetry_string(telem, nichrome):
     """ Extracts and anaylzes the altitude from a raw telemetry string """
     telemFields = telem.split(",")
