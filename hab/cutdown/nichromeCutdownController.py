@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 ################################################################################
 Written by Nicholas Sullo while working at WMSI 8/17/2015
@@ -25,9 +25,11 @@ import sys
 import re
 from nichromeControl import Nichrome
 
-################# CONSTANTS ####################
+################################ CONSTANTS ####################################
 MAX_ALTITUDE = 550 # Set the maximum altitude (in meters) HERE!
-################################################
+HAB_TELEM_FILE = '/home/pi/pits/tracker/telemetry.txt'
+HAB_TELEM_BACKUP = '/home/pi/pits/tracker/telemetrydata.txt' # where to dump log data
+###############################################################################
 
 def loginfo(msg):
     newMsg = time.strftime("%x %X %Z ") + msg
@@ -47,7 +49,7 @@ def process_telemetry_string(telem, nichrome):
 
             # Make sure this altitude is not larger than the predetermined cut down altitude
             if alt >= MAX_ALTITUDE:
-                Nichrome.activate()
+                nichrome.activate()
                 return True
 
     # Continue on parsing errors
@@ -62,9 +64,9 @@ def main():
     nichrome = Nichrome()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
     # This opens the log file the Pi in the sky saves to
-    with open('/home/pi/pits/tracker/telemetry.txt', 'r+') as log: # /home/pi/pits/tracker/telemetry.txt
+    with open(HAB_TELEM_FILE, 'r+') as log:
         # This opens a file to move the telemetry data to
-        with open('/home/pi/pits/tracker/telemetrydata.txt', 'a') as logout: # /home/pi/pits/tracker/telemetrydata.txt
+        with open(HAB_TELEM_BACKUP, 'a') as logout:
             while True:
                 # Read what lines we have
                 # (from the seek position, which we enforce to be 0)
@@ -96,9 +98,16 @@ def main():
                 # delay for a short bit
                 time.sleep(0.25)
 
+def create_telemetry_file():
+    """ Creates the telemetry file if it isn't there """
+    print "Creating telem file if it doesn't exist...""
+    with open(HAB_TELEM_FILE, "w"):
+        pass
+
 while True:
     # restart on any exception
     try:
+        create_telemetry_file()
         main()
     except SyntaxError as e:
         loginfo("SYNTAX ERROR: {}".format(e))

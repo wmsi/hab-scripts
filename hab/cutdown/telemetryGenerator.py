@@ -28,7 +28,7 @@ while True:
 
         telem = generate_telemetry_string(num, alt)
         log.write(telem)
-        print(telem)
+        print telem,
 
         # pop if we get too high
         if alt > POP_ALTITUDE:

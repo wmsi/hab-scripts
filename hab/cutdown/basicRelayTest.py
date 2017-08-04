@@ -12,7 +12,6 @@ from nichromeControl import Nichrome
 def main():
     nichrome = Nichrome()
     print(nichrome)
-    print "Activating nichrome..."
     nichrome.activate()
-    
+
 main()
