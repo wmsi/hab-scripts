@@ -32,7 +32,7 @@ HAB_TELEM_BACKUP = '/home/pi/pits/tracker/telemetrydata.txt' # where to dump log
 ###############################################################################
 
 def loginfo(msg):
-    newMsg = time.strftime("%x %X %Z ") + msg
+    newMsg = time.strftime("%x %X %Z | ") + msg
     print newMsg
 
 def process_telemetry_string(telem, nichrome):
@@ -94,13 +94,14 @@ def main():
                     # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
                     if done:
                         return
+                        loginfo("Quit after cutdown.")
 
                 # delay for a short bit
                 time.sleep(0.25)
 
 def create_telemetry_file():
     """ Creates the telemetry file if it isn't there """
-    print "Creating telem file if it doesn't exist...""
+    loginfo("Creating telem file if it doesn't exist...")
     with open(HAB_TELEM_FILE, "w"):
         pass
 
@@ -109,6 +110,8 @@ while True:
     try:
         create_telemetry_file()
         main()
+        break # if we finish gracefully, quit
+
     except SyntaxError as e:
         loginfo("SYNTAX ERROR: {}".format(e))
     except KeyboardInterrupt:
