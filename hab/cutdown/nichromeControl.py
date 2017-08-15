@@ -14,7 +14,7 @@ import RPi.GPIO as gpio
 import time
 
 ######################### IMPORTANT VALUES
-NICHROME_PIN = 18 # TODO GPIO 18 is not used by the Pi in the Sky Board.
+NICHROME_PIN = 1 # GPIO 0 and 1 are not used by any Pi in the Sky Boards.
 NICHROME_ACTIVATIONS = 5 # number of nichrome pulses
 
 class Nichrome:
