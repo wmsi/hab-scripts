@@ -1149,7 +1149,7 @@ For compatibility with older versions -->
 
 <!-- type: std::string; default: &quot;&quot;
 PortAudio input device name -->
-<PORTINDEVICE>Loopback: PCM (hw:1,1)</PORTINDEVICE>
+<PORTINDEVICE>Loopback: PCM (hw:1,0)</PORTINDEVICE>
 
 <!-- type: int; default: -1
 PortAudio input device index -->

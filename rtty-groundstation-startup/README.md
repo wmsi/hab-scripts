@@ -6,16 +6,15 @@ This involves creating a Virtual Audio Loopback Device, starting up the SDR tool
 and configuring it to output to that Loopback Device, and then starting up DL-FLDIGI
 and listening to that device.
 
-Designed for use on the Raspberry Pi.
-
 ## Installation
 You will need to have [GQRX](http://gqrx.dk/) and [DL-FLDIGI](https://ukhas.org.uk/projects:dl-fldigi) installed to use this script.
 
 You will also need to configure some variables to your setup:
+- Set `RPI` to 1 when using this on the Raspberry Pi, otherwise set to 0.
 - Set `DL_FLDIGI_ROOT` to the `src/` directory of your DL-FLDIGI installation.
-- Set `GQRX_ROOT` to the root directory of your GQRX installation.
+- Set `GQRX_ROOT` to the root directory of your GQRX installation, or ignore this/leave it blank if you installed GQRX via apt-get.
 
-It has also only been tested on the Raspberry Pi. 
+This has been tested on both the Raspberry Pi and a Lenovo Laptop.
 
 ## Usage
 To execute the scripts, simply run ./start_all as a normal (non-sudo) user

@@ -1,20 +1,44 @@
 #!/bin/bash
 # gqrx & fldigi Launcher
 
+######## CONSTANTS TO CONFIGURE ##################################################
+RPI=0								# set to 1 when on Raspberry Pi, otherwise 0
+DL_FLDIGI_ROOT=~/dl-fldigi/src 		# set to src folder of DL-FLDIGI
+GQRX_ROOT=~/gqrx-2.6-rpi3-2    		# set to root folder of gqrx, or ignore/set 
+                                    # to nothing if gqrx is installed via apt-get
+##################################################################################
+
+######### Misc display constants (just for display, don't do anything) ###########
+rtty_freq="434.25 MHz"
+##################################################################################
+
 BASEDIR=$(dirname "$(readlink -f "$0")")
 
 clear
 echo "===== WMSI Startup script for HAB tracker station software ====="
 
-# Useful coloring / styling commands (used as ${bold}**Text**${normal})
+# Useful coloring / styling commands (used as ${bold} Text ${normal})
 bold=$(tput bold)
 normal=$(tput sgr0)
 
-# Constants 
-rtty_freq="434.25 MHz"
-sdr_device="Realtek RTL2838UHIDIR SN: 00000001"
-DL_FLDIGI_ROOT=~/dl-fldigi/src
-GQRX_ROOT=~/gqrx-2.6-rpi3-2
+# Figure out config files:
+# We use different ones for the RPi for two reasons:
+#    1. The smaller touchsreen requires interface changes for GQRX
+#    2. On the RPi, the audio works using PortAudio device names in QQRX, 
+#       while the Ubuntu versions use the nicer Pulseaudio device names.
+#       This also incidentally leads to changes required in the fldigi 
+#       config as well (see <PORTINDEVICE>)
+if [ $RPI -eq 1 ]; then
+    echo "Configuring for ${bold}Raspberry Pi${normal}..."
+	gqrx_config=$BASEDIR/config/gqrx_default-rpi.conf
+    fldigi_settings_config=$BASEDIR/config/fldigi_def-rpi.xml
+    dlfldigi_gui_config=$BASEDIR/config/dl-fldigi.prefs # nothing differs
+else
+    echo "Configuring for ${bold}Ubuntu system${normal}..."
+    gqrx_config=$BASEDIR/config/gqrx_default.conf
+    fldigi_settings_config=$BASEDIR/config/fldigi_def.xml
+    dlfldigi_gui_config=$BASEDIR/config/dl-fldigi.prefs
+fi
 
 # We use the snd-aloop module (equivalent to a driver in Windows)
 # to handle the audio loopback, which feeds the radio sound output by gqrx 
@@ -42,10 +66,13 @@ Once gqrx is playing, return to this terminal and press ENTER.
 ===============================================================
 "
 read -p "Press ENTER now to start gqrx..."
+
 # Copy the good configuration:
-cp $BASEDIR/config/gqrx_default.conf ~/.config/gqrx/default.conf
-# Start gqrx:
-sh $GQRX_ROOT/run_gqrx.sh &>/dev/null &
+cp $gqrx_config ~/.config/gqrx/default.conf
+
+# Start gqrx (first try the root directory, then the global install):
+sh $GQRX_ROOT/run_gqrx.sh &> /dev/null || gqrx &> /dev/null &
+
 sleep 2
 read -p "Once you have finished starting gqrx, press ENTER here..."
 read -p "Press ENTER again to confirm that gqrx is ${bold}fully${normal} started 
@@ -67,9 +94,12 @@ read -p "Press ENTER now to start dl-fldigi..."
 
 # Let's start fldigi now that gqrx is listening and playing back...
 echo "Starting dl-fldigi..."
+
 # Copy the good configuration
-cp $BASEDIR/config/dl-fldigi.prefs ~/.dl-fldigi/
-cp $BASEDIR/config/fldigi_def.xml ~/.dl-fldigi/
+mkdir -p ~/.dl-fldigi # create if not exists
+cp $dlfldigi_gui_config ~/.dl-fldigi/dl-fldigi.prefs
+cp $fldigi_settings_config ~/.dl-fldigi/fldigi_def.xml
+
 # Start dl-fldigi
 $DL_FLDIGI_ROOT/dl-fldigi --hab &>/dev/null &
 sleep 5
