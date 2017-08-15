@@ -2,9 +2,9 @@
 # gqrx & fldigi Launcher
 
 ######## CONSTANTS TO CONFIGURE ##################################################
-RPI=0								# set to 1 when on Raspberry Pi, otherwise 0
-DL_FLDIGI_ROOT=~/dl-fldigi/src 		# set to src folder of DL-FLDIGI
-GQRX_ROOT=~/gqrx-2.6-rpi3-2    		# set to root folder of gqrx, or ignore/set 
+RPI=0                               # set to 1 when on Raspberry Pi, otherwise 0
+DL_FLDIGI_ROOT=~/dl-fldigi/src      # set to src folder of DL-FLDIGI
+GQRX_ROOT=~/gqrx-2.6-rpi3-2         # set to root folder of gqrx, or ignore/set 
                                     # to nothing if gqrx is installed via apt-get
 ##################################################################################
 
