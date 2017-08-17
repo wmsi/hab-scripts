@@ -39,7 +39,8 @@ def process_telemetry_string(telem, nichrome):
     """ Extracts and anaylzes the altitude from a raw telemetry string """
     telemFields = telem.split(",")
     try:
-        # Check to make sure the string is actually the telemetry data. This will have to be changed based on what you name your payload
+        # Check to make sure the string is actually the telemetry data. 
+        # This will have to be changed based on what you name your payload
         if re.match("\$\$\w{1,10}", telemFields[0]) != None:
             # The 6th field in the telemetry string is the altitude
             # (Turn the string altitude value into an integer)
@@ -63,11 +64,13 @@ def main():
     loginfo("Starting controller...")
     nichrome = Nichrome()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
-    # This opens the log file the Pi in the sky saves to
-    with open(HAB_TELEM_FILE, 'r+') as log:
-        # This opens a file to move the telemetry data to
-        with open(HAB_TELEM_BACKUP, 'a') as logout:
-            while True:
+    while True:
+        # Make sure to re-open files becasue otherwise, if one is deleted, 
+        # we will stop writing to it
+        # This opens the log file the Pi in the sky saves to
+        with open(HAB_TELEM_FILE, 'r+') as log:
+            # This opens a file to move the telemetry data to
+            with open(HAB_TELEM_BACKUP, 'a') as logout:
                 # Read what lines we have
                 # (from the seek position, which we enforce to be 0)
                 log.seek(0)
@@ -91,7 +94,8 @@ def main():
                 for line in telemetry:
                     done = process_telemetry_string(line, nichrome)
 
-                    # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
+                    # After we lose the balloon, there is no reason for this 
+                    # program to continue running, so break out of all loops
                     if done:
                         loginfo("Quit after cutdown.")
                         return
@@ -114,6 +118,7 @@ while True:
 
     except SyntaxError as e:
         loginfo("SYNTAX ERROR: {}".format(e))
+        break
     except KeyboardInterrupt:
         break
     except:
