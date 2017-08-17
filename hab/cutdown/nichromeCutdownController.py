@@ -34,7 +34,7 @@ HAB_TELEM_BACKUP = '/home/pi/pits/tracker/telemetrydata.txt' # where to dump log
 def loginfo(msg):
     newMsg = time.strftime("%x %X %Z | ") + msg
     print newMsg
-    
+
 def process_telemetry_string(telem, nichrome):
     """ Extracts and anaylzes the altitude from a raw telemetry string """
     telemFields = telem.split(",")
@@ -45,7 +45,7 @@ def process_telemetry_string(telem, nichrome):
             # (Turn the string altitude value into an integer)
             alt = int(telemFields[5])
 
-            loginfo("Altitude: {}".format(alt))
+            loginfo("altitude: {:>4} m (target: {} m)".format(alt, MAX_ALTITUDE))
 
             # Make sure this altitude is not larger than the predetermined cut down altitude
             if alt >= MAX_ALTITUDE:
@@ -93,8 +93,8 @@ def main():
 
                     # After we lose the balloon, there is no reason for this program to continue running, so break out of all loops
                     if done:
-                        return
                         loginfo("Quit after cutdown.")
+                        return
 
                 # delay for a short bit
                 time.sleep(0.25)
