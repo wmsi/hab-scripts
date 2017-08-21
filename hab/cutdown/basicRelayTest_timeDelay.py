@@ -18,7 +18,7 @@ Version 1.Git
 from nichromeControl import Nichrome
 from time import sleep
 
-timeDelay = 5 * 60
+timeDelay = 10 * 60
 
 def main():
     sleep(5)
@@ -26,10 +26,13 @@ def main():
     print(nichrome)
     # Indicate that we know the script is running:
     print "The script has been successfully initialized."
-    nichrome.activate(nichromePulseCount = 3, pulseHigh = 1, pulseLow = 1)
+    nichrome.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 1)
+    # Sleep again to indicate an obvious point in time:
+    sleep(3)
+    nichrome.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 1)
     # Wait before starting...
     sleep(timeDelay)
-    # We only want 7 activations, so:
-    nichrome.activate(5)
+    # We only want 5 activations, so:
+    nichrome.activate(5, 1, 0.5)
 
 main()
