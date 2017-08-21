@@ -7,3 +7,6 @@
 
 # find location of this file; use -u to stop bufferring (so log shows up immediately)
 sudo python -u $(dirname "$BASH_SOURCE")/nichromeCutdownController.py &>> /home/pi/cutdown.log &
+
+# If running a time-based test, uncomment this:
+# sudo python -u $(dirname "$BASH_SOURCE")/basicRelayTest_timeDelay.py &>> /home/pi/cutdown.log &
