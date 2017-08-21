@@ -22,21 +22,20 @@ class Nichrome:
         gpio.setmode(gpio.BCM)
         gpio.setup(NICHROME_PIN, gpio.OUT)
 
-    def activate(self, nichromeActiveCount = NICHROME_ACTIVATIONS):
-        """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses,
-        setup_pins() must be called."""
-        print "Activating nichrome {} times...".format(nichromeActiveCount)
+    def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, pulseHigh = 2, pulseLow = 0.1):
+        """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses."""
+        print "Activating nichrome {} times...".format(nichromePulseCount)
 
-        for i in range(nichromeActiveCount):
+        for i in range(nichromePulseCount):
             # Turn on the nichrome cutdown and let go of the balloon!
              gpio.output(NICHROME_PIN, gpio.HIGH)
              print "Sending high..."
-             time.sleep(2) # 2 second pulse
+             time.sleep(pulseHigh) # ...some pulseHigh time...
 
              # Turn off signal (nichrome will then shut off)
              gpio.output(NICHROME_PIN, gpio.LOW)
              print "Sending low..."
-             time.sleep(0.1) # 100ms off time
+             time.sleep(pulseLow) # ...some pulseLow time...
 
     def disable(self):
         gpio.output(NICHROME_PIN, gpio.LOW)
