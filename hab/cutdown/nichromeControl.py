@@ -21,6 +21,7 @@ class Nichrome:
     def __init__(self):
         gpio.setmode(gpio.BCM)
         gpio.setup(NICHROME_PIN, gpio.OUT)
+        print "Initialized nichrome at {}.".format(time.strftime("%x %X %Z"))
 
     def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, pulseHigh = 2, pulseLow = 0.1):
         """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses."""
