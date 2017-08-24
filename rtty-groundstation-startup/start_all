@@ -50,6 +50,7 @@ fi
 
 # Let's start by loading the kernel module:
 echo "Bringing up ALSA audio loopback..."
+echo "(enter your password if prompted)"
 sudo modprobe snd-aloop
 sleep 2
 
