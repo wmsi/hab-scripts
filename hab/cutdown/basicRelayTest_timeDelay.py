@@ -24,12 +24,11 @@ def main():
     sleep(5)
     nichrome = Nichrome()
     print(nichrome)
+    
     # Indicate that we know the script is running:
     print "The script has been successfully initialized."
-    nichrome.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 1)
-    # Sleep again to indicate an obvious point in time:
-    sleep(3)
-    nichrome.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 1)
+    nichrome.indicate()
+    
     # Wait before starting...
     sleep(timeDelay)
     # We only want 5 activations, so:

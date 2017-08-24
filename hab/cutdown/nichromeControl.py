@@ -23,7 +23,7 @@ class Nichrome:
         gpio.setup(NICHROME_PIN, gpio.OUT)
         print "Initialized nichrome at {}.".format(time.strftime("%x %X %Z"))
 
-    def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, pulseHigh = 2, pulseLow = 0.1):
+    def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, pulseHigh = 1, pulseLow = 0.5):
         """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses."""
         print "Activating nichrome {} times...".format(nichromePulseCount)
 
@@ -37,7 +37,13 @@ class Nichrome:
              gpio.output(NICHROME_PIN, gpio.LOW)
              print "Sending low..."
              time.sleep(pulseLow) # ...some pulseLow time...
-
+             
+    def indicate(self):
+        """ An indicator function to signal something to the user """
+        for i in range(0,3):
+            self.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 0.5)
+            time.sleep(2)
+        
     def disable(self):
         gpio.output(NICHROME_PIN, gpio.LOW)
 
