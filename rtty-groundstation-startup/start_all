@@ -22,7 +22,7 @@ normal=$(tput sgr0)
 
 # Figure out whether on RPi (to use RPi config files)
 # will be set to 1 when on Raspberry Pi, otherwise 0
-RPI=$(cat /etc/os-release | grep "ID=raspian" | wc -l)
+RPI=$(cat /etc/os-release | grep "ID=raspbian" | wc -l)
 
 # Figure out config files:
 # We use different ones for the RPi for two reasons:
