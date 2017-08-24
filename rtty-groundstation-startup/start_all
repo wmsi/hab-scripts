@@ -2,7 +2,6 @@
 # gqrx & fldigi Launcher
 
 ######## CONSTANTS TO CONFIGURE ##################################################
-RPI=0                               # set to 1 when on Raspberry Pi, otherwise 0
 DL_FLDIGI_ROOT=~/dl-fldigi/src      # set to src folder of DL-FLDIGI
 GQRX_ROOT=~/gqrx-2.6-rpi3-2         # set to root folder of gqrx, or ignore/set 
                                     # to nothing if gqrx is installed via apt-get
@@ -20,6 +19,10 @@ echo "===== WMSI Startup script for HAB tracker station software ====="
 # Useful coloring / styling commands (used as ${bold} Text ${normal})
 bold=$(tput bold)
 normal=$(tput sgr0)
+
+# Figure out whether on RPi (to use RPi config files)
+# will be set to 1 when on Raspberry Pi, otherwise 0
+RPI=$(cat /etc/os-release | grep "ID=raspian" | wc -l)
 
 # Figure out config files:
 # We use different ones for the RPi for two reasons:
