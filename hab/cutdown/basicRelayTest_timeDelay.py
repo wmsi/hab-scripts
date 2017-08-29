@@ -32,6 +32,6 @@ def main():
     # Wait before starting...
     sleep(timeDelay)
     # We only want 5 activations, so:
-    nichrome.activate(5, 1, 0.5)
+    nichrome.activate()
 
 main()

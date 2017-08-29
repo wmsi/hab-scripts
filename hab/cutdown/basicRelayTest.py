@@ -13,6 +13,6 @@ from nichromeControl import Nichrome
 def main():
     nichrome = Nichrome()
     print(nichrome)
-    nichrome.activate()
+    nichrome.activate(20, 1, 0.5)
 
 main()
