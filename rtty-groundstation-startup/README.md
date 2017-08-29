@@ -10,7 +10,6 @@ and listening to that device.
 You will need to have [GQRX](http://gqrx.dk/) and [DL-FLDIGI](https://ukhas.org.uk/projects:dl-fldigi) installed to use this script.
 
 You will also need to configure some variables to your setup:
-- Set `RPI` to 1 when using this on the Raspberry Pi, otherwise set to 0.
 - Set `DL_FLDIGI_ROOT` to the `src/` directory of your DL-FLDIGI installation.
 - Set `GQRX_ROOT` to the root directory of your GQRX installation, or ignore this/leave it blank if you installed GQRX via apt-get.
 
