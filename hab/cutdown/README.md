@@ -11,6 +11,8 @@ See altitudeParser.py
 Note that this is older code, but has been flown.
 
 ## Nichrome Cutdown
+See [here](https://docs.google.com/document/d/1rieX-uNmAr2Uhw3OzbViHTt83vMpPBDO8XLKl2WadVs/edit#) for broad overview
+
 See nichromeCutdownController.py
 
 To see how the cutdown circuit was built, see [here](https://docs.google.com/document/d/1if0S766RU5wZ8iE2Y9442clqn32jEeF_cgAFM9OfUlE/edit)
