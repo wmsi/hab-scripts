@@ -14,7 +14,8 @@ import RPi.GPIO as gpio
 import time
 
 ######################### IMPORTANT VALUES
-NICHROME_PIN = 1 # GPIO 0 and 1 are not used by any Pi in the Sky Boards.
+NICHROME_PIN = 1 # GPIO 0 and 1 are not used by any Pi in the Sky Boards. 
+		 # See above link for what pins are taken
 DEF_NICHROME_ACTIVATIONS = 10 # default number of nichrome pulses
 DEF_NICHROME_HIGH_TIME = 1 # s; time during pulse that nichrome is high
 DEF_NICHROME_LOW_TIME = 0.5 # s; time during pulse that nichrome is low
