@@ -65,6 +65,9 @@ def main():
     nichrome = Nichrome()
     """ Reads telemetry lines from a logfile and transfers them to a backup file """
     while True:
+        # continually deactivate nichrome to make sure we don't get any spikes
+        nichrome.deactivate()
+    
         # Make sure to re-open files becasue otherwise, if one is deleted, 
         # we will stop writing to it
         # This opens the log file the Pi in the sky saves to
@@ -97,11 +100,18 @@ def main():
                     # After we lose the balloon, there is no reason for this 
                     # program to continue running, so break out of all loops
                     if done:
-                        loginfo("Quit after cutdown.")
-                        return
+                        loginfo("Keeping nichrome pulled low after cutdown.")
+                        keepNichromeLow(nichrome)
 
                 # delay for a short bit
                 time.sleep(0.25)
+
+def keepNichromeLow(nichrome):
+    """ Sleeps forever, periodically forcing nichrome to stay low (deactivated) """
+    while True:
+        loginfo("Deactivating nichrome again...")
+        nichrome.deactivate()
+        time.sleep(2)
 
 def create_telemetry_file():
     """ Creates the telemetry file if it isn't there """

@@ -46,12 +46,12 @@ class Nichrome:
         for i in range(0,3):
             self.activate(nichromePulseCount = 3, pulseHigh = 0.005, pulseLow = 0.5)
             time.sleep(2)
-        
-    def disable(self):
+            
+    def deactivate(self):
         gpio.output(NICHROME_PIN, gpio.LOW)
 
     def __del__(self):
-        self.disable()
+        self.deactivate()
         gpio.cleanup()
 
     def __str__(self):
