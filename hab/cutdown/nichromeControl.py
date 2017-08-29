@@ -15,7 +15,9 @@ import time
 
 ######################### IMPORTANT VALUES
 NICHROME_PIN = 1 # GPIO 0 and 1 are not used by any Pi in the Sky Boards.
-NICHROME_ACTIVATIONS = 10 # number of nichrome pulses
+DEF_NICHROME_ACTIVATIONS = 10 # default number of nichrome pulses
+DEF_NICHROME_HIGH_TIME = 1 # s; time during pulse that nichrome is high
+DEF_NICHROME_LOW_TIME = 0.5 # s; time during pulse that nichrome is low
 
 class Nichrome:
     def __init__(self):
@@ -23,7 +25,8 @@ class Nichrome:
         gpio.setup(NICHROME_PIN, gpio.OUT)
         print "Initialized nichrome at {}.".format(time.strftime("%x %X %Z"))
 
-    def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, pulseHigh = 1, pulseLow = 0.5):
+    def activate(self, nichromePulseCount = NICHROME_ACTIVATIONS, \
+                 pulseHigh = DEF_NICHROME_HIGH_TIME, pulseLow = DEF_NICHROME_LOW_TIME):
         """ Activates the nichrome cutdown with a series of 2000ms/100ms on-off pulses."""
         print "Activating nichrome {} times...".format(nichromePulseCount)
 
