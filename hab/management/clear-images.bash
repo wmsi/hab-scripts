@@ -33,16 +33,16 @@ wrong, there will be no error here; check your path!)"
         sleep 2
         
         # remove all images inside folders
-        echo "sudo rm -rf $IMG_DIREC/FULL/*"
-        sudo rm -rf $IMG_DIREC/FULL/*
-        echo "sudo rm -rf $IMG_DIREC/LORA0/*"
-        sudo rm -rf $IMG_DIREC/LORA0/*
-        echo "sudo rm -rf $IMG_DIREC/LORA1/*"
-        sudo rm -rf $IMG_DIREC/LORA1/*
-        echo "sudo rm -rf $IMG_DIREC/ORIGINAL/*"
-        sudo rm -rf $IMG_DIREC/ORIGINAL/*
-        echo "sudo rm -rf $IMG_DIREC/RTTY/*"
-        sudo rm -rf $IMG_DIREC/RTTY/*
+        echo "sudo rm -rfv $IMG_DIREC/FULL/*"
+        sudo rm -rfv $IMG_DIREC/FULL/*
+        echo "sudo rm -rfv $IMG_DIREC/LORA0/*"
+        sudo rm -rfv $IMG_DIREC/LORA0/*
+        echo "sudo rm -rfv $IMG_DIREC/LORA1/*"
+        sudo rm -rfv $IMG_DIREC/LORA1/*
+        echo "sudo rm -rfv $IMG_DIREC/ORIGINAL/*"
+        sudo rm -rfv $IMG_DIREC/ORIGINAL/*
+        echo "sudo rm -rfv $IMG_DIREC/RTTY/*"
+        sudo rm -rfv $IMG_DIREC/RTTY/*
         
         echo "Finished"
         exit 0
