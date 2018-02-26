@@ -30,7 +30,7 @@ This involves confirming the configuration in /etc/network/interfaces (run sudo 
 
 <table>
   <tr>
-    <td></td>
+    <td><img src="img/image_0.jpg"></td>
   </tr>
   <tr>
     <td>The interface with the cable unplugged</td>
@@ -44,7 +44,7 @@ This involves confirming the configuration in /etc/network/interfaces (run sudo 
 
 <table>
   <tr>
-    <td></td>
+    <td><img src="img/image_1.jpg"></td>
   </tr>
   <tr>
     <td>The interface with the cable and Pi connected</td>
@@ -86,7 +86,7 @@ Note: looking online, there are several ways people say to do this, but this met
 
 <table>
   <tr>
-    <td></td>
+    <td><img src="img/image_2.jpg"></td>
   </tr>
   <tr>
     <td>Configuring the "Wi-Fi" interface</td>
@@ -96,7 +96,7 @@ Note: looking online, there are several ways people say to do this, but this met
 
 <table>
   <tr>
-    <td></td>
+    <td><img src="img/image_3.jpg"></td>
   </tr>
   <tr>
     <td>Appearance of network interfaces when correctly configured</td>
@@ -128,7 +128,7 @@ Note: looking online, there are several ways people say to do this, but this met
 
 <table>
   <tr>
-    <td></td>
+    <td><img src="img/iamge_4.jpg"></td>
   </tr>
   <tr>
     <td>The configuration windows, with the connection set up correctly</td>
