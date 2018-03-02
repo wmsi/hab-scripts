@@ -19,7 +19,7 @@ By using the outline, you can quickly find a section that you’re searching for
 
 	
 
-**Note: **Most of this information is condenced from [http://www.pi-in-the-sky.com/index.php?id=board-connections](http://www.pi-in-the-sky.com/index.php?id=board-connections) and [http://www.pi-in-the-sky.com/index.php?id=stacking-guide](http://www.pi-in-the-sky.com/index.php?id=stacking-guide) 
+**Note: **Most of this information is condensed from [http://www.pi-in-the-sky.com/index.php?id=board-connections](http://www.pi-in-the-sky.com/index.php?id=board-connections) and [http://www.pi-in-the-sky.com/index.php?id=stacking-guide](http://www.pi-in-the-sky.com/index.php?id=stacking-guide) 
 
 On the hardware side, you must have the following parts for a basic testing setup (*these should all be included in either the Raspberry Pi kit or the Pi In The Sky kit*):
 
@@ -133,7 +133,8 @@ These two command may take some time to execute, but once they are done your Pi 
 
 ### Configure the Pi
 
-Enter: **sudo raspi-config**Using the arrow keys and tab to change the highlighted option, navigate the page to enable:
+Enter: **sudo raspi-config**
+Using the arrow keys and tab to change the highlighted option, navigate the page to enable:
 
         1. Interfacing Options --> Enable Camera
 
